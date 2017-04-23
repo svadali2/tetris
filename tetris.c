@@ -32,14 +32,16 @@ int kbhit(void)
 
 int grid[20][10];
 
-int shape1[8] = {0,1,0,0,
-		 1,1,1,0};
+int shape1[8] = {0,0,1,0,
+		 0,1,1,1};
 int shape2[8] = {1,1,0,0,
 		 0,1,1,0};
 int shape3[8] = {0,0,0,0,
 		 1,1,1,1};
 
 int i,j;
+
+char input;
 
 static void drawGrid(int grid[20][10]) {
 	
@@ -106,10 +108,70 @@ static int * moveShape(int shape[8], int * ptr) {
 	
 }
 
+
+
 static int checkBounds(int * ptr) {
 	if (ptr[0] == 17) return 1;
 	else return 0;
 }
+
+static int moveLeft(int shape[8],int * ptr) {
+
+	//erase the old shape
+	grid[ptr[0]][ptr[1]] = 0;
+	grid[ptr[0]][ptr[1]+1] = 0;
+	grid[ptr[0]][ptr[1]+2] = 0;
+	grid[ptr[0]][ptr[1]+3] = 0;
+	grid[ptr[0]+1][ptr[1]] = 0;
+	grid[ptr[0]+1][ptr[1]+1] = 0;
+	grid[ptr[0]+1][ptr[1]+2] = 0;
+	grid[ptr[0]+1][ptr[1]+3] = 0;
+
+	if ((ptr[1] - 1) >=1) ptr[1] = ptr[1] - 1;
+	else if ((ptr[1] - 1) == 0) {
+		if (shape[0] == 0 && shape[4] == 0) ptr[1] = ptr[1] - 1;
+	}
+	return ptr[1];
+}
+
+static int moveRight(int shape[8],int * ptr) {
+
+	//erase the old shape
+	grid[ptr[0]][ptr[1]] = 0;
+	grid[ptr[0]][ptr[1]+1] = 0;
+	grid[ptr[0]][ptr[1]+2] = 0;
+	grid[ptr[0]][ptr[1]+3] = 0;
+	grid[ptr[0]+1][ptr[1]] = 0;
+	grid[ptr[0]+1][ptr[1]+1] = 0;
+	grid[ptr[0]+1][ptr[1]+2] = 0;
+	grid[ptr[0]+1][ptr[1]+3] = 0;
+
+	if ((ptr[1] + 5) <= 9) ptr[1] = ptr[1] + 1;
+	//bounds check to the right.
+	else if ((ptr[1] + 5) == 10) {
+		if (shape[3] == 0 && shape[7] == 0) ptr[1] = ptr[1]+1;
+	}
+	return ptr[1];
+}
+
+static int moveDown(int shape[8],int * ptr) {
+	
+	//erase the old shape
+	grid[ptr[0]][ptr[1]] = 0;
+	grid[ptr[0]][ptr[1]+1] = 0;
+	grid[ptr[0]][ptr[1]+2] = 0;
+	grid[ptr[0]][ptr[1]+3] = 0;
+	grid[ptr[0]+1][ptr[1]] = 0;
+	grid[ptr[0]+1][ptr[1]+1] = 0;
+	grid[ptr[0]+1][ptr[1]+2] = 0;
+	grid[ptr[0]+1][ptr[1]+3] = 0;
+	
+	if ((ptr[0] + 1) <= 19) ptr[0] = ptr[0] + 1;
+	
+	return ptr[0];
+	
+}
+
 
 
 int main() {
@@ -127,8 +189,20 @@ int main() {
 	while(!checkBounds(start_ptr)){
 		for (i = 0; i < 500000000;i++);
 		if (kbhit()) {
-			char c = getchar();
-			printf("temp:%c",c);
+			input = getchar();
+			if (input == 'a') {
+				//move left
+				start_ptr[1] = moveLeft(shape1,start_ptr);
+			}
+			else if (input == 'd') {
+				start_ptr[1] = moveRight(shape1,start_ptr);
+			}
+			else if (input == 'w') {
+				
+			}
+			else if (input == 's') {
+				start_ptr[0] = moveDown(shape1,start_ptr);
+			}
 		}
 		start_ptr = moveShape(shape1,start_ptr);
 		drawGrid(grid);

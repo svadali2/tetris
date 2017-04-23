@@ -18,3 +18,8 @@ gcc -o tetris tetris.c
 5. run the game:
 ./tetris
 
+
+TODO: make a global array with all shapes
+TODO: rotation functionality
+
+DONE: right, left, down functionality for one shape is done
