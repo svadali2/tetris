@@ -32,13 +32,19 @@ int kbhit(void)
 
 int grid[20][10];
 
-int shape1[8] = {0,1,0,0,
-		 1,1,1,0};
+int shape1[4][8] = {{0,1,0,0,
+		 							1,1,1,0},
+		 							{1,0,1,1,
+		 							 1,0,0,0},
+		 							{1,1,1,0,
+		 							0,1,0,0},
+		 							{0,1,1,1,
+		 							0,1,0,0}};
 int shape2[8] = {1,1,0,0,
 		 0,1,1,0};
 int shape3[8] = {0,0,0,0,
 		 1,1,1,1};
-
+int block_index = 0; 
 int i,j;
 int vertCheck = 0; 
 int curBlock[8] = {0,0,0,0,
@@ -87,8 +93,6 @@ static void drawShape(int shape[8]) {
 static int * moveShape(int shape[8], int * ptr) {
 
 	//erase the old shape
-	if(vertCheck==1)
-	{
 		grid[ptr[0]-3][ptr[1]] = 0;
 		grid[ptr[0]-3][ptr[1]+1] = 0;
 		grid[ptr[0]-2][ptr[1]] = 0;
@@ -108,40 +112,51 @@ static int * moveShape(int shape[8], int * ptr) {
 		grid[ptr[0]+1][ptr[1]+2] = 0;
 		grid[ptr[0]+1][ptr[1]+3] = 0;
 
-	}
-	else {
-		grid[ptr[0]][ptr[1]] = 0;
-		grid[ptr[0]][ptr[1]+1] = 0;
-		grid[ptr[0]][ptr[1]+2] = 0;
-		grid[ptr[0]][ptr[1]+3] = 0;
-		grid[ptr[0]+1][ptr[1]] = 0;
-		grid[ptr[0]+1][ptr[1]+1] = 0;
-		grid[ptr[0]+1][ptr[1]+2] = 0;
-		grid[ptr[0]+1][ptr[1]+3] = 0;
-	}
 
 
 	//draw the new shape
-	if(vertCheck)
+	if(rotCounter==1)
 	{
-		grid[ptr[0]-2][ptr[1]] = shape[4];
-		grid[ptr[0]-2][ptr[1]+1] = shape[0];
-		grid[ptr[0]-1][ptr[1]] = shape[5];
-		grid[ptr[0]-1][ptr[1]+1] = shape[1];
-		grid[ptr[0]][ptr[1]] = shape[6];
-		grid[ptr[0]][ptr[1]+1] = shape[2];
-		grid[ptr[0]+1][ptr[1]] = shape[7];
-		grid[ptr[0]+1][ptr[1]+1] = shape[3];
+		grid[ptr[0]-2][ptr[1]] = shape1[1][0];
+		grid[ptr[0]-2][ptr[1]+1] = shape1[1][1];
+		grid[ptr[0]-1][ptr[1]] = shape1[1][2];
+		grid[ptr[0]-1][ptr[1]+1] = shape1[1][3];
+		grid[ptr[0]][ptr[1]] = shape1[1][4];
+		grid[ptr[0]][ptr[1]+1] = shape1[1][5];
+		grid[ptr[0]+1][ptr[1]] = shape1[1][6];
+		grid[ptr[0]+1][ptr[1]+1] = shape1[1][7];
+	}
+	else if(rotCounter ==2)
+	{
+		grid[ptr[0]+1][ptr[1]] = shape1[2][0];
+		grid[ptr[0]+1][ptr[1]+1] = shape1[2][1];
+		grid[ptr[0]+1][ptr[1]+2] = shape1[2][2];
+		grid[ptr[0]+1][ptr[1]+3] = shape1[2][3];
+		grid[ptr[0]+2][ptr[1]] = shape1[2][4];
+		grid[ptr[0]+2][ptr[1]+1] = shape1[2][5];
+		grid[ptr[0]+2][ptr[1]+2] = shape1[2][6];
+		grid[ptr[0]+2][ptr[1]+3] = shape1[2][7];
+	}
+	else if(rotCounter ==3){
+		grid[ptr[0]-2][ptr[1]] = shape1[3][0];
+		grid[ptr[0]-2][ptr[1]+1] = shape1[3][1];
+		grid[ptr[0]-1][ptr[1]] = shape1[3][2];
+		grid[ptr[0]-1][ptr[1]+1] = shape1[3][3];
+		grid[ptr[0]][ptr[1]] = shape1[3][4];
+		grid[ptr[0]][ptr[1]+1] = shape1[3][5];
+		grid[ptr[0]+1][ptr[1]] = shape1[3][6];
+		grid[ptr[0]+1][ptr[1]+1] = shape1[3][7];
 	}
 	else{
-		grid[ptr[0]+1][ptr[1]] = shape[0];
-		grid[ptr[0]+1][ptr[1]+1] = shape[1];
-		grid[ptr[0]+1][ptr[1]+2] = shape[2];
-		grid[ptr[0]+1][ptr[1]+3] = shape[3];
-		grid[ptr[0]+2][ptr[1]] = shape[4];
-		grid[ptr[0]+2][ptr[1]+1] = shape[5];
-		grid[ptr[0]+2][ptr[1]+2] = shape[6];
-		grid[ptr[0]+2][ptr[1]+3] = shape[7];
+		grid[ptr[0]+1][ptr[1]] = shape1[0][0];
+		grid[ptr[0]+1][ptr[1]+1] = shape1[0][1];
+		grid[ptr[0]+1][ptr[1]+2] = shape1[0][2];
+		grid[ptr[0]+1][ptr[1]+3] = shape1[0][3];
+		grid[ptr[0]+2][ptr[1]] = shape1[0][4];
+		grid[ptr[0]+2][ptr[1]+1] = shape1[0][5];
+		grid[ptr[0]+2][ptr[1]+2] = shape1[0][6];
+		grid[ptr[0]+2][ptr[1]+3] = shape1[0][7];
+		rotCounter =0;
 	}
 
 	//printf("%x\n",ptr[0]);
@@ -357,7 +372,8 @@ int main() {
 	int start_pt[2] = {1,3};
 	
 	int * start_ptr = start_pt;
-	copyBlock(shape1,curBlock);
+	copyBlock(shape1[0],curBlock);
+	block_index =1;
 	drawShape(curBlock);
 	drawGrid(grid);
 
