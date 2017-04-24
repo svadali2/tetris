@@ -1,9 +1,36 @@
-#include <stdbool.h>
 #include <stdio.h>
-#include <stdlib.h>
 #include <termios.h>
+#include <unistd.h>
+#include <fcntl.h>
 
-int grid[20][12];
+int kbhit(void)
+{
+  struct termios oldt, newt;
+  int ch;
+  int oldf;
+
+  tcgetattr(STDIN_FILENO, &oldt);
+  newt = oldt;
+  newt.c_lflag &= ~(ICANON | ECHO);
+  tcsetattr(STDIN_FILENO, TCSANOW, &newt);
+  oldf = fcntl(STDIN_FILENO, F_GETFL, 0);
+  fcntl(STDIN_FILENO, F_SETFL, oldf | O_NONBLOCK);
+
+  ch = getchar();
+
+  tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
+  fcntl(STDIN_FILENO, F_SETFL, oldf);
+
+  if(ch != EOF)
+  {
+    ungetc(ch, stdin);
+    return 1;
+  }
+
+  return 0;
+}
+
+int grid[20][10];
 
 int shape1[8] = {0,1,0,0,
 		 1,1,1,0};
@@ -13,12 +40,17 @@ int shape3[8] = {0,0,0,0,
 		 1,1,1,1};
 
 int i,j;
+int vertCheck = 0; 
+int curBlock[8] = {0,0,0,0,
+									0,0,0,0 };
+char input;
 
-static void drawGrid(int grid[20][12]) {
+int rotCounter;
+static void drawGrid(int grid[20][10]) {
 	
 for (i = 0; i < 20; i ++) {
-	for (j = 0;j < 12;j++) {
-		if (j == 0 || j == 11) {
+	for (j = 0;j < 10;j++) {
+		if (j == 0 || j == 9) {
 			grid[i][j] = 1;
 		}
 		else if (i== 0 || i == 19) {
@@ -28,7 +60,7 @@ for (i = 0; i < 20; i ++) {
 }
 
 for (i = 0; i < 20; i ++) {
-	for (j = 0;j < 12;j++) {
+	for (j = 0;j < 10;j++) {
 		if (grid[i][j] == 1) {
 			printf("*");
 		}
@@ -52,155 +84,305 @@ static void drawShape(int shape[8]) {
 	return;	
 }
 
-static int * moveShape(int shape[8], int * ptr, char c) {
+static int * moveShape(int shape[8], int * ptr) {
 
 	//erase the old shape
-	grid[ptr[0]][ptr[1]] = 0;
-	grid[ptr[0]][ptr[1]+1] = 0;
-	grid[ptr[0]][ptr[1]+2] = 0;
-	grid[ptr[0]][ptr[1]+3] = 0;
-	grid[ptr[0]+1][ptr[1]] = 0;
-	grid[ptr[0]+1][ptr[1]+1] = 0;
-	grid[ptr[0]+1][ptr[1]+2] = 0;
-	grid[ptr[0]+1][ptr[1]+3] = 0;
+	if(vertCheck==1)
+	{
+		grid[ptr[0]-3][ptr[1]] = 0;
+		grid[ptr[0]-3][ptr[1]+1] = 0;
+		grid[ptr[0]-2][ptr[1]] = 0;
+		grid[ptr[0]-2][ptr[1]+1] = 0;
+		grid[ptr[0]-1][ptr[1]] = 0;
+		grid[ptr[0]-1][ptr[1]+1] = 0;
+		grid[ptr[0]][ptr[1]] = 0;
+		grid[ptr[0]][ptr[1]+1] = 0;
+		grid[ptr[0]+1][ptr[1]] = 0;
+		grid[ptr[0]+1][ptr[1]+1] = 0;
+		grid[ptr[0]][ptr[1]] = 0;
+		grid[ptr[0]][ptr[1]+1] = 0;
+		grid[ptr[0]][ptr[1]+2] = 0;
+		grid[ptr[0]][ptr[1]+3] = 0;
+		grid[ptr[0]+1][ptr[1]] = 0;
+		grid[ptr[0]+1][ptr[1]+1] = 0;
+		grid[ptr[0]+1][ptr[1]+2] = 0;
+		grid[ptr[0]+1][ptr[1]+3] = 0;
+
+	}
+	else {
+		grid[ptr[0]][ptr[1]] = 0;
+		grid[ptr[0]][ptr[1]+1] = 0;
+		grid[ptr[0]][ptr[1]+2] = 0;
+		grid[ptr[0]][ptr[1]+3] = 0;
+		grid[ptr[0]+1][ptr[1]] = 0;
+		grid[ptr[0]+1][ptr[1]+1] = 0;
+		grid[ptr[0]+1][ptr[1]+2] = 0;
+		grid[ptr[0]+1][ptr[1]+3] = 0;
+	}
 
 
-	int rows,cols;
-    char buf[200];
-    char garbage[2];
-    int move_success = 0;
+	//draw the new shape
+	if(vertCheck)
+	{
+		grid[ptr[0]-2][ptr[1]] = shape[4];
+		grid[ptr[0]-2][ptr[1]+1] = shape[0];
+		grid[ptr[0]-1][ptr[1]] = shape[5];
+		grid[ptr[0]-1][ptr[1]+1] = shape[1];
+		grid[ptr[0]][ptr[1]] = shape[6];
+		grid[ptr[0]][ptr[1]+1] = shape[2];
+		grid[ptr[0]+1][ptr[1]] = shape[7];
+		grid[ptr[0]+1][ptr[1]+1] = shape[3];
+	}
+	else{
+		grid[ptr[0]+1][ptr[1]] = shape[0];
+		grid[ptr[0]+1][ptr[1]+1] = shape[1];
+		grid[ptr[0]+1][ptr[1]+2] = shape[2];
+		grid[ptr[0]+1][ptr[1]+3] = shape[3];
+		grid[ptr[0]+2][ptr[1]] = shape[4];
+		grid[ptr[0]+2][ptr[1]+1] = shape[5];
+		grid[ptr[0]+2][ptr[1]+2] = shape[6];
+		grid[ptr[0]+2][ptr[1]+3] = shape[7];
+	}
 
-    
-    switch ( c ) 
-    {
-    case 'w':
-        grid[ptr[0]+1][ptr[1]] = shape[0];
-				grid[ptr[0]+1][ptr[1]+1] = shape[1];
-				grid[ptr[0]+1][ptr[1]+2] = shape[2];
-				grid[ptr[0]+1][ptr[1]+3] = shape[3];
-				grid[ptr[0]+2][ptr[1]] = shape[4];
-				grid[ptr[0]+2][ptr[1]+1] = shape[5];
-				grid[ptr[0]+2][ptr[1]+2] = shape[6];
-				grid[ptr[0]+2][ptr[1]+3] = shape[7];
-        break;
-    case 'a':
-    	if(ptr[1]>0){
-	      grid[ptr[0]+1][ptr[1]-1] = shape[0];
-				grid[ptr[0]+1][ptr[1]] = shape[1];
-				grid[ptr[0]+1][ptr[1]+1] = shape[2];
-				grid[ptr[0]+1][ptr[1]+2] = shape[3];
-				grid[ptr[0]+2][ptr[1]-1] = shape[4];
-				grid[ptr[0]+2][ptr[1]] = shape[5];
-				grid[ptr[0]+2][ptr[1]+1] = shape[6];
-				grid[ptr[0]+2][ptr[1]+2] = shape[7];
-			}
-        break;
-    case 's':
-        grid[ptr[0]+1][ptr[1]] = shape[0];
-				grid[ptr[0]+1][ptr[1]+1] = shape[1];
-				grid[ptr[0]+1][ptr[1]+2] = shape[2];
-				grid[ptr[0]+1][ptr[1]+3] = shape[3];
-				grid[ptr[0]+2][ptr[1]] = shape[4];
-				grid[ptr[0]+2][ptr[1]+1] = shape[5];
-				grid[ptr[0]+2][ptr[1]+2] = shape[6];
-				grid[ptr[0]+2][ptr[1]+3] = shape[7];
-        break;
-    case 'd':
-        if(ptr[1]+4<12){
-	      grid[ptr[0]+1][ptr[1]+1] = shape[0];
-				grid[ptr[0]+1][ptr[1]+2] = shape[1];
-				grid[ptr[0]+1][ptr[1]+3] = shape[2];
-				grid[ptr[0]+1][ptr[1]+4] = shape[3];
-				grid[ptr[0]+2][ptr[1]+1] = shape[4];
-				grid[ptr[0]+2][ptr[1]+2] = shape[5];
-				grid[ptr[0]+2][ptr[1]+3] = shape[6];
-				grid[ptr[0]+2][ptr[1]+4] = shape[7];
-			}
-        break;
+	//printf("%x\n",ptr[0]);
+	//printf("%x\n",ptr[1]);
 
-        
-    default: //any other input
-        //printf("Invalid Input. Valid inputs are: w, a, s, d, q, n.\n");
-    	grid[ptr[0]+1][ptr[1]] = shape[0];
-			grid[ptr[0]+1][ptr[1]+1] = shape[1];
-			grid[ptr[0]+1][ptr[1]+2] = shape[2];
-			grid[ptr[0]+1][ptr[1]+3] = shape[3];
-			grid[ptr[0]+2][ptr[1]] = shape[4];
-			grid[ptr[0]+2][ptr[1]+1] = shape[5];
-			grid[ptr[0]+2][ptr[1]+2] = shape[6];
-			grid[ptr[0]+2][ptr[1]+3] = shape[7];
-			break;
-    }
 
 	ptr[0] = ptr[0]+1;
 	return ptr;
 	
 }
 
+
+
 static int checkBounds(int * ptr) {
 	if (ptr[0] == 17) return 1;
 	else return 0;
 }
 
+static int moveLeft(int shape[8],int * ptr) {
 
-static struct termios old, new;
+	//erase the old shape
+	if(vertCheck==1)
+	{
+		grid[ptr[0]-2][ptr[1]] = 0;
+		grid[ptr[0]-2][ptr[1]+1] = 0;
+		grid[ptr[0]-1][ptr[1]] = 0;
+		grid[ptr[0]-1][ptr[1]+1] = 0;
+		grid[ptr[0]][ptr[1]] = 0;
+		grid[ptr[0]][ptr[1]+1] = 0;
+		grid[ptr[0]+1][ptr[1]] = 0;
+		grid[ptr[0]+1][ptr[1]+1] = 0;
+		grid[ptr[0]][ptr[1]] = 0;
+		grid[ptr[0]][ptr[1]+1] = 0;
+		grid[ptr[0]][ptr[1]+2] = 0;
+		grid[ptr[0]][ptr[1]+3] = 0;
+		grid[ptr[0]+1][ptr[1]] = 0;
+		grid[ptr[0]+1][ptr[1]+1] = 0;
+		grid[ptr[0]+1][ptr[1]+2] = 0;
+		grid[ptr[0]+1][ptr[1]+3] = 0;
+	}
+	else{
+		grid[ptr[0]][ptr[1]] = 0;
+		grid[ptr[0]][ptr[1]+1] = 0;
+		grid[ptr[0]][ptr[1]+2] = 0;
+		grid[ptr[0]][ptr[1]+3] = 0;
+		grid[ptr[0]+1][ptr[1]] = 0;
+		grid[ptr[0]+1][ptr[1]+1] = 0;
+		grid[ptr[0]+1][ptr[1]+2] = 0;
+		grid[ptr[0]+1][ptr[1]+3] = 0;
+	}
 
-/* Initialize new terminal i/o settings */
-void initTermios(int echo) 
-{
-  tcgetattr(0, &old); /* grab old terminal i/o settings */
-  new = old; /* make new settings same as old settings */
-  new.c_lflag &= ~ICANON; /* disable buffered i/o */
-  new.c_lflag &= echo ? ECHO : ~ECHO; /* set echo mode */
-  tcsetattr(0, TCSANOW, &new); /* use these new terminal i/o settings now */
+	if ((ptr[1] - 1) >=1) ptr[1] = ptr[1] - 1;
+	else if ((ptr[1] - 1) == 0) {
+		if (shape[0] == 0 && shape[4] == 0) ptr[1] = ptr[1] - 1;
+	}
+	return ptr[1];
 }
 
-/* Restore old terminal i/o settings */
-void resetTermios(void) 
-{
-  tcsetattr(0, TCSANOW, &old);
+static int moveRight(int shape[8],int * ptr) {
+
+	//erase the old shape
+	if(vertCheck==1)
+	{
+		grid[ptr[0]-2][ptr[1]] = 0;
+		grid[ptr[0]-2][ptr[1]+1] = 0;
+		grid[ptr[0]-1][ptr[1]] = 0;
+		grid[ptr[0]-1][ptr[1]+1] = 0;
+		grid[ptr[0]][ptr[1]] = 0;
+		grid[ptr[0]][ptr[1]+1] = 0;
+		grid[ptr[0]+1][ptr[1]] = 0;
+		grid[ptr[0]+1][ptr[1]+1] = 0;
+		grid[ptr[0]][ptr[1]] = 0;
+		grid[ptr[0]][ptr[1]+1] = 0;
+		grid[ptr[0]][ptr[1]+2] = 0;
+		grid[ptr[0]][ptr[1]+3] = 0;
+		grid[ptr[0]+1][ptr[1]] = 0;
+		grid[ptr[0]+1][ptr[1]+1] = 0;
+		grid[ptr[0]+1][ptr[1]+2] = 0;
+		grid[ptr[0]+1][ptr[1]+3] = 0;
+	}
+	else{
+		grid[ptr[0]][ptr[1]] = 0;
+		grid[ptr[0]][ptr[1]+1] = 0;
+		grid[ptr[0]][ptr[1]+2] = 0;
+		grid[ptr[0]][ptr[1]+3] = 0;
+		grid[ptr[0]+1][ptr[1]] = 0;
+		grid[ptr[0]+1][ptr[1]+1] = 0;
+		grid[ptr[0]+1][ptr[1]+2] = 0;
+		grid[ptr[0]+1][ptr[1]+3] = 0;
+	}
+
+	if ((ptr[1] + 5) <= 9) ptr[1] = ptr[1] + 1;
+	//bounds check to the right.
+	else if ((ptr[1] + 5) == 10) {
+		if (shape[3] == 0 && shape[7] == 0) ptr[1] = ptr[1]+1;
+	}
+	return ptr[1];
 }
 
-/* Read 1 character - echo defines echo mode */
-char getch_(int echo) 
-{
-  char ch;
-  initTermios(echo);
-  ch = getchar();
-  resetTermios();
-  return ch;
+static int moveDown(int shape[8],int * ptr) {
+	
+	//erase the old shape
+	if(vertCheck ==1 )
+	{
+		grid[ptr[0]-2][ptr[1]] = 0;
+		grid[ptr[0]-2][ptr[1]+1] = 0;
+		grid[ptr[0]-1][ptr[1]] = 0;
+		grid[ptr[0]-1][ptr[1]+1] = 0;
+		grid[ptr[0]][ptr[1]] = 0;
+		grid[ptr[0]][ptr[1]+1] = 0;
+		grid[ptr[0]+1][ptr[1]] = 0;
+		grid[ptr[0]+1][ptr[1]+1] = 0;
+		grid[ptr[0]][ptr[1]] = 0;
+		grid[ptr[0]][ptr[1]+1] = 0;
+		grid[ptr[0]][ptr[1]+2] = 0;
+		grid[ptr[0]][ptr[1]+3] = 0;
+		grid[ptr[0]+1][ptr[1]] = 0;
+		grid[ptr[0]+1][ptr[1]+1] = 0;
+		grid[ptr[0]+1][ptr[1]+2] = 0;
+		grid[ptr[0]+1][ptr[1]+3] = 0;
+	}
+	else {
+		grid[ptr[0]][ptr[1]] = 0;
+		grid[ptr[0]][ptr[1]+1] = 0;
+		grid[ptr[0]][ptr[1]+2] = 0;
+		grid[ptr[0]][ptr[1]+3] = 0;
+		grid[ptr[0]+1][ptr[1]] = 0;
+		grid[ptr[0]+1][ptr[1]+1] = 0;
+		grid[ptr[0]+1][ptr[1]+2] = 0;
+		grid[ptr[0]+1][ptr[1]+3] = 0;
+	}	
+	if ((ptr[0] + 1) <= 19) ptr[0] = ptr[0] + 1;
+	//printf("%x\n",ptr[0]);
+	//printf("%x\n",ptr[1]);
+	return ptr[0];
+	
 }
 
-/* Read 1 character without echo */
-char getch(void) 
-{
-  return getch_(0);
+static int rotate(int shape[8],int*ptr){
+		grid[ptr[0]][ptr[1]] = 0;
+		grid[ptr[0]][ptr[1]+1] = 0;
+		grid[ptr[0]][ptr[1]+2] = 0;
+		grid[ptr[0]][ptr[1]+3] = 0;
+		grid[ptr[0]+1][ptr[1]] = 0;
+		grid[ptr[0]+1][ptr[1]+1] = 0;
+		grid[ptr[0]+1][ptr[1]+2] = 0;
+		grid[ptr[0]+1][ptr[1]+3] = 0;
+
+		grid[ptr[0]-2][ptr[1]] = 0;
+		grid[ptr[0]-2][ptr[1]+1] = 0;
+		grid[ptr[0]-1][ptr[1]] = 0;
+		grid[ptr[0]-1][ptr[1]+1] = 0;
+		grid[ptr[0]][ptr[1]] = 0;
+		grid[ptr[0]][ptr[1]+1] = 0;
+		grid[ptr[0]+1][ptr[1]] = 0;
+		grid[ptr[0]+1][ptr[1]+1] = 0;
+		grid[ptr[0]+2][ptr[1]] = 0;
+		grid[ptr[0]+2][ptr[1]+1] = 0;		
+
+	if(rotCounter > 0){
+		vertCheck =1;
+	}
+	if ((ptr[0] + 1) <= 19) ptr[0] = ptr[0] + 1;
+	return ptr[0];
 }
+//
+// int* randomShape(){
+// 	int randNum = rand()%7;
+// 	int * resultShape;
+// 	switch(randNum){
+// 		case 0:
+// 			resultShape = shape1[0];
+// 			break;
+// 		case 1:
+// 			resultShape = shape2[0];
+// 			break;
+// 		case 2:
+// 			resultShape = shape3[0];
+// 			break;
+// 		case 3:
+// 			resultShape = shape4[0];
+// 			break;
+// 		case 4:
+// 			resultShape = shape5[0];
+// 			break;
+// 		case 5:
+// 			resultShape = shape6[0];
+// 			break;
+// 		case 6:
+// 			resultShape = shape7[0];
+// 			break;
+// 		default:
+// 			resultShape = shape1[0];
+// 			break;
+// 	}
 
-/* Read 1 character with echo */
-char getche(void) 
-{
-  return getch_(1);
+// 	return resultShape;
+// }
+
+void copyBlock(int inBlock[8],int outBlock[8]){
+	int count;
+	for(count = 0; count< 8; count++)
+	{
+		outBlock[count] = inBlock[count];
+	}
 }
-
-
 
 int main() {
 	
 	drawGrid(grid);		//draw initial grid
+	char temp[3];
 	
 	int start_pt[2] = {1,3};
 	
 	int * start_ptr = start_pt;
-	
-	drawShape(shape1);
+	copyBlock(shape1,curBlock);
+	drawShape(curBlock);
 	drawGrid(grid);
-	char c;
+
+	rotCounter = 0;
 	while(!checkBounds(start_ptr)){
 		for (i = 0; i < 500000000;i++);
-		c = getch();
-		printf("character : %c\n",c);
-		start_ptr = moveShape(shape1,start_ptr,c);
+		if (kbhit()) {
+			input = getchar();
+			if (input == 'a') {
+				//move left
+				start_ptr[1] = moveLeft(curBlock,start_ptr);
+			}
+			else if (input == 'd') {
+				start_ptr[1] = moveRight(curBlock,start_ptr);
+			}
+			else if (input == 'w') {
+				rotCounter++;
+				start_ptr[0] = rotate(curBlock,start_ptr);
+			}
+			else if (input == 's') {
+				start_ptr[0] = moveDown(curBlock,start_ptr);
+			}
+		}
+
+		start_ptr = moveShape(curBlock,start_ptr);
 		drawGrid(grid);
 	}
 	return 0;
