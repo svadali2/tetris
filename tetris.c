@@ -171,7 +171,7 @@ static int * moveShape(int shape[8], int * ptr) {
 
 
 static int checkBounds(int * ptr) {
-	if (ptr[0] == 17) return 1;
+	if (ptr[0] == 19) return 1;
 	else return 0;
 }
 
@@ -316,10 +316,21 @@ static int rotate(int shape[8],int*ptr){
 		grid[ptr[0]+2][ptr[1]] = 0;
 		grid[ptr[0]+2][ptr[1]+1] = 0;		
 
-	if(rotCounter > 0){
-		vertCheck =1;
+	if(rotCounter == 1){
+		ptr[0] = ptr[0];
 	}
+	else if(rotCounter ==2){
+		ptr[0] = ptr[0]-3;
+	}
+	else if(rotCounter == 3){
+		ptr[0] = ptr[0];
+	}
+	else if(rotCounter ==4){
+		ptr[0] = ptr[0]-3;
+	}
+
 	if ((ptr[0] + 1) <= 19) ptr[0] = ptr[0] + 1;
+
 	return ptr[0];
 }
 //
