@@ -32,17 +32,20 @@ int kbhit(void)
 
 int grid[20][10];
 
-int shape1[8] = {0,0,1,0,
-		 0,1,1,1};
+int shape1[8] = {0,1,0,0,
+		 1,1,1,0};
 int shape2[8] = {1,1,0,0,
 		 0,1,1,0};
 int shape3[8] = {0,0,0,0,
 		 1,1,1,1};
 
 int i,j;
-
+int vertCheck = 0; 
+int curBlock[8] = {0,0,0,0,
+									0,0,0,0 };
 char input;
 
+int rotCounter;
 static void drawGrid(int grid[20][10]) {
 	
 for (i = 0; i < 20; i ++) {
@@ -84,25 +87,67 @@ static void drawShape(int shape[8]) {
 static int * moveShape(int shape[8], int * ptr) {
 
 	//erase the old shape
-	grid[ptr[0]][ptr[1]] = 0;
-	grid[ptr[0]][ptr[1]+1] = 0;
-	grid[ptr[0]][ptr[1]+2] = 0;
-	grid[ptr[0]][ptr[1]+3] = 0;
-	grid[ptr[0]+1][ptr[1]] = 0;
-	grid[ptr[0]+1][ptr[1]+1] = 0;
-	grid[ptr[0]+1][ptr[1]+2] = 0;
-	grid[ptr[0]+1][ptr[1]+3] = 0;
+	if(vertCheck==1)
+	{
+		grid[ptr[0]-3][ptr[1]] = 0;
+		grid[ptr[0]-3][ptr[1]+1] = 0;
+		grid[ptr[0]-2][ptr[1]] = 0;
+		grid[ptr[0]-2][ptr[1]+1] = 0;
+		grid[ptr[0]-1][ptr[1]] = 0;
+		grid[ptr[0]-1][ptr[1]+1] = 0;
+		grid[ptr[0]][ptr[1]] = 0;
+		grid[ptr[0]][ptr[1]+1] = 0;
+		grid[ptr[0]+1][ptr[1]] = 0;
+		grid[ptr[0]+1][ptr[1]+1] = 0;
+		grid[ptr[0]][ptr[1]] = 0;
+		grid[ptr[0]][ptr[1]+1] = 0;
+		grid[ptr[0]][ptr[1]+2] = 0;
+		grid[ptr[0]][ptr[1]+3] = 0;
+		grid[ptr[0]+1][ptr[1]] = 0;
+		grid[ptr[0]+1][ptr[1]+1] = 0;
+		grid[ptr[0]+1][ptr[1]+2] = 0;
+		grid[ptr[0]+1][ptr[1]+3] = 0;
+
+	}
+	else {
+		grid[ptr[0]][ptr[1]] = 0;
+		grid[ptr[0]][ptr[1]+1] = 0;
+		grid[ptr[0]][ptr[1]+2] = 0;
+		grid[ptr[0]][ptr[1]+3] = 0;
+		grid[ptr[0]+1][ptr[1]] = 0;
+		grid[ptr[0]+1][ptr[1]+1] = 0;
+		grid[ptr[0]+1][ptr[1]+2] = 0;
+		grid[ptr[0]+1][ptr[1]+3] = 0;
+	}
+
 
 	//draw the new shape
-	grid[ptr[0]+1][ptr[1]] = shape[0];
-	grid[ptr[0]+1][ptr[1]+1] = shape[1];
-	grid[ptr[0]+1][ptr[1]+2] = shape[2];
-	grid[ptr[0]+1][ptr[1]+3] = shape[3];
-	grid[ptr[0]+2][ptr[1]] = shape[4];
-	grid[ptr[0]+2][ptr[1]+1] = shape[5];
-	grid[ptr[0]+2][ptr[1]+2] = shape[6];
-	grid[ptr[0]+2][ptr[1]+3] = shape[7];
-	
+	if(vertCheck)
+	{
+		grid[ptr[0]-2][ptr[1]] = shape[4];
+		grid[ptr[0]-2][ptr[1]+1] = shape[0];
+		grid[ptr[0]-1][ptr[1]] = shape[5];
+		grid[ptr[0]-1][ptr[1]+1] = shape[1];
+		grid[ptr[0]][ptr[1]] = shape[6];
+		grid[ptr[0]][ptr[1]+1] = shape[2];
+		grid[ptr[0]+1][ptr[1]] = shape[7];
+		grid[ptr[0]+1][ptr[1]+1] = shape[3];
+	}
+	else{
+		grid[ptr[0]+1][ptr[1]] = shape[0];
+		grid[ptr[0]+1][ptr[1]+1] = shape[1];
+		grid[ptr[0]+1][ptr[1]+2] = shape[2];
+		grid[ptr[0]+1][ptr[1]+3] = shape[3];
+		grid[ptr[0]+2][ptr[1]] = shape[4];
+		grid[ptr[0]+2][ptr[1]+1] = shape[5];
+		grid[ptr[0]+2][ptr[1]+2] = shape[6];
+		grid[ptr[0]+2][ptr[1]+3] = shape[7];
+	}
+
+	printf("%x\n",ptr[0]);
+	printf("%x\n",ptr[1]);
+
+
 	ptr[0] = ptr[0]+1;
 	return ptr;
 	
@@ -118,14 +163,35 @@ static int checkBounds(int * ptr) {
 static int moveLeft(int shape[8],int * ptr) {
 
 	//erase the old shape
-	grid[ptr[0]][ptr[1]] = 0;
-	grid[ptr[0]][ptr[1]+1] = 0;
-	grid[ptr[0]][ptr[1]+2] = 0;
-	grid[ptr[0]][ptr[1]+3] = 0;
-	grid[ptr[0]+1][ptr[1]] = 0;
-	grid[ptr[0]+1][ptr[1]+1] = 0;
-	grid[ptr[0]+1][ptr[1]+2] = 0;
-	grid[ptr[0]+1][ptr[1]+3] = 0;
+	if(vertCheck==1)
+	{
+		grid[ptr[0]-2][ptr[1]] = 0;
+		grid[ptr[0]-2][ptr[1]+1] = 0;
+		grid[ptr[0]-1][ptr[1]] = 0;
+		grid[ptr[0]-1][ptr[1]+1] = 0;
+		grid[ptr[0]][ptr[1]] = 0;
+		grid[ptr[0]][ptr[1]+1] = 0;
+		grid[ptr[0]+1][ptr[1]] = 0;
+		grid[ptr[0]+1][ptr[1]+1] = 0;
+		grid[ptr[0]][ptr[1]] = 0;
+		grid[ptr[0]][ptr[1]+1] = 0;
+		grid[ptr[0]][ptr[1]+2] = 0;
+		grid[ptr[0]][ptr[1]+3] = 0;
+		grid[ptr[0]+1][ptr[1]] = 0;
+		grid[ptr[0]+1][ptr[1]+1] = 0;
+		grid[ptr[0]+1][ptr[1]+2] = 0;
+		grid[ptr[0]+1][ptr[1]+3] = 0;
+	}
+	else{
+		grid[ptr[0]][ptr[1]] = 0;
+		grid[ptr[0]][ptr[1]+1] = 0;
+		grid[ptr[0]][ptr[1]+2] = 0;
+		grid[ptr[0]][ptr[1]+3] = 0;
+		grid[ptr[0]+1][ptr[1]] = 0;
+		grid[ptr[0]+1][ptr[1]+1] = 0;
+		grid[ptr[0]+1][ptr[1]+2] = 0;
+		grid[ptr[0]+1][ptr[1]+3] = 0;
+	}
 
 	if ((ptr[1] - 1) >=1) ptr[1] = ptr[1] - 1;
 	else if ((ptr[1] - 1) == 0) {
@@ -137,14 +203,35 @@ static int moveLeft(int shape[8],int * ptr) {
 static int moveRight(int shape[8],int * ptr) {
 
 	//erase the old shape
-	grid[ptr[0]][ptr[1]] = 0;
-	grid[ptr[0]][ptr[1]+1] = 0;
-	grid[ptr[0]][ptr[1]+2] = 0;
-	grid[ptr[0]][ptr[1]+3] = 0;
-	grid[ptr[0]+1][ptr[1]] = 0;
-	grid[ptr[0]+1][ptr[1]+1] = 0;
-	grid[ptr[0]+1][ptr[1]+2] = 0;
-	grid[ptr[0]+1][ptr[1]+3] = 0;
+	if(vertCheck==1)
+	{
+		grid[ptr[0]-2][ptr[1]] = 0;
+		grid[ptr[0]-2][ptr[1]+1] = 0;
+		grid[ptr[0]-1][ptr[1]] = 0;
+		grid[ptr[0]-1][ptr[1]+1] = 0;
+		grid[ptr[0]][ptr[1]] = 0;
+		grid[ptr[0]][ptr[1]+1] = 0;
+		grid[ptr[0]+1][ptr[1]] = 0;
+		grid[ptr[0]+1][ptr[1]+1] = 0;
+		grid[ptr[0]][ptr[1]] = 0;
+		grid[ptr[0]][ptr[1]+1] = 0;
+		grid[ptr[0]][ptr[1]+2] = 0;
+		grid[ptr[0]][ptr[1]+3] = 0;
+		grid[ptr[0]+1][ptr[1]] = 0;
+		grid[ptr[0]+1][ptr[1]+1] = 0;
+		grid[ptr[0]+1][ptr[1]+2] = 0;
+		grid[ptr[0]+1][ptr[1]+3] = 0;
+	}
+	else{
+		grid[ptr[0]][ptr[1]] = 0;
+		grid[ptr[0]][ptr[1]+1] = 0;
+		grid[ptr[0]][ptr[1]+2] = 0;
+		grid[ptr[0]][ptr[1]+3] = 0;
+		grid[ptr[0]+1][ptr[1]] = 0;
+		grid[ptr[0]+1][ptr[1]+1] = 0;
+		grid[ptr[0]+1][ptr[1]+2] = 0;
+		grid[ptr[0]+1][ptr[1]+3] = 0;
+	}
 
 	if ((ptr[1] + 5) <= 9) ptr[1] = ptr[1] + 1;
 	//bounds check to the right.
@@ -157,22 +244,110 @@ static int moveRight(int shape[8],int * ptr) {
 static int moveDown(int shape[8],int * ptr) {
 	
 	//erase the old shape
-	grid[ptr[0]][ptr[1]] = 0;
-	grid[ptr[0]][ptr[1]+1] = 0;
-	grid[ptr[0]][ptr[1]+2] = 0;
-	grid[ptr[0]][ptr[1]+3] = 0;
-	grid[ptr[0]+1][ptr[1]] = 0;
-	grid[ptr[0]+1][ptr[1]+1] = 0;
-	grid[ptr[0]+1][ptr[1]+2] = 0;
-	grid[ptr[0]+1][ptr[1]+3] = 0;
-	
+	if(vertCheck ==1 )
+	{
+		grid[ptr[0]-2][ptr[1]] = 0;
+		grid[ptr[0]-2][ptr[1]+1] = 0;
+		grid[ptr[0]-1][ptr[1]] = 0;
+		grid[ptr[0]-1][ptr[1]+1] = 0;
+		grid[ptr[0]][ptr[1]] = 0;
+		grid[ptr[0]][ptr[1]+1] = 0;
+		grid[ptr[0]+1][ptr[1]] = 0;
+		grid[ptr[0]+1][ptr[1]+1] = 0;
+		grid[ptr[0]][ptr[1]] = 0;
+		grid[ptr[0]][ptr[1]+1] = 0;
+		grid[ptr[0]][ptr[1]+2] = 0;
+		grid[ptr[0]][ptr[1]+3] = 0;
+		grid[ptr[0]+1][ptr[1]] = 0;
+		grid[ptr[0]+1][ptr[1]+1] = 0;
+		grid[ptr[0]+1][ptr[1]+2] = 0;
+		grid[ptr[0]+1][ptr[1]+3] = 0;
+	}
+	else {
+		grid[ptr[0]][ptr[1]] = 0;
+		grid[ptr[0]][ptr[1]+1] = 0;
+		grid[ptr[0]][ptr[1]+2] = 0;
+		grid[ptr[0]][ptr[1]+3] = 0;
+		grid[ptr[0]+1][ptr[1]] = 0;
+		grid[ptr[0]+1][ptr[1]+1] = 0;
+		grid[ptr[0]+1][ptr[1]+2] = 0;
+		grid[ptr[0]+1][ptr[1]+3] = 0;
+	}	
 	if ((ptr[0] + 1) <= 19) ptr[0] = ptr[0] + 1;
-	
+	//printf("%x\n",ptr[0]);
+	//printf("%x\n",ptr[1]);
 	return ptr[0];
 	
 }
 
+static int rotate(int shape[8],int*ptr){
+		grid[ptr[0]][ptr[1]] = 0;
+		grid[ptr[0]][ptr[1]+1] = 0;
+		grid[ptr[0]][ptr[1]+2] = 0;
+		grid[ptr[0]][ptr[1]+3] = 0;
+		grid[ptr[0]+1][ptr[1]] = 0;
+		grid[ptr[0]+1][ptr[1]+1] = 0;
+		grid[ptr[0]+1][ptr[1]+2] = 0;
+		grid[ptr[0]+1][ptr[1]+3] = 0;
 
+		grid[ptr[0]-2][ptr[1]] = 0;
+		grid[ptr[0]-2][ptr[1]+1] = 0;
+		grid[ptr[0]-1][ptr[1]] = 0;
+		grid[ptr[0]-1][ptr[1]+1] = 0;
+		grid[ptr[0]][ptr[1]] = 0;
+		grid[ptr[0]][ptr[1]+1] = 0;
+		grid[ptr[0]+1][ptr[1]] = 0;
+		grid[ptr[0]+1][ptr[1]+1] = 0;
+		grid[ptr[0]+2][ptr[1]] = 0;
+		grid[ptr[0]+2][ptr[1]+1] = 0;		
+
+	if(rotCounter > 0){
+		vertCheck =1;
+	}
+	if ((ptr[0] + 1) <= 19) ptr[0] = ptr[0] + 1;
+	return ptr[0];
+}
+//
+// int* randomShape(){
+// 	int randNum = rand()%7;
+// 	int * resultShape;
+// 	switch(randNum){
+// 		case 0:
+// 			resultShape = shape1[0];
+// 			break;
+// 		case 1:
+// 			resultShape = shape2[0];
+// 			break;
+// 		case 2:
+// 			resultShape = shape3[0];
+// 			break;
+// 		case 3:
+// 			resultShape = shape4[0];
+// 			break;
+// 		case 4:
+// 			resultShape = shape5[0];
+// 			break;
+// 		case 5:
+// 			resultShape = shape6[0];
+// 			break;
+// 		case 6:
+// 			resultShape = shape7[0];
+// 			break;
+// 		default:
+// 			resultShape = shape1[0];
+// 			break;
+// 	}
+
+// 	return resultShape;
+// }
+
+void copyBlock(int inBlock[8],int outBlock[8]){
+	int count;
+	for(count = 0; count< 8; count++)
+	{
+		outBlock[count] = inBlock[count];
+	}
+}
 
 int main() {
 	
@@ -182,29 +357,32 @@ int main() {
 	int start_pt[2] = {1,3};
 	
 	int * start_ptr = start_pt;
-	
-	drawShape(shape1);
+	copyBlock(shape1,curBlock);
+	drawShape(curBlock);
 	drawGrid(grid);
 
+	rotCounter = 0;
 	while(!checkBounds(start_ptr)){
 		for (i = 0; i < 500000000;i++);
 		if (kbhit()) {
 			input = getchar();
 			if (input == 'a') {
 				//move left
-				start_ptr[1] = moveLeft(shape1,start_ptr);
+				start_ptr[1] = moveLeft(curBlock,start_ptr);
 			}
 			else if (input == 'd') {
-				start_ptr[1] = moveRight(shape1,start_ptr);
+				start_ptr[1] = moveRight(curBlock,start_ptr);
 			}
 			else if (input == 'w') {
-				
+				rotCounter++;
+				start_ptr[0] = rotate(curBlock,start_ptr);
 			}
 			else if (input == 's') {
-				start_ptr[0] = moveDown(shape1,start_ptr);
+				start_ptr[0] = moveDown(curBlock,start_ptr);
 			}
 		}
-		start_ptr = moveShape(shape1,start_ptr);
+
+		start_ptr = moveShape(curBlock,start_ptr);
 		drawGrid(grid);
 	}
 	return 0;
