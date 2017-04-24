@@ -144,8 +144,8 @@ static int * moveShape(int shape[8], int * ptr) {
 		grid[ptr[0]+2][ptr[1]+3] = shape[7];
 	}
 
-	printf("%x\n",ptr[0]);
-	printf("%x\n",ptr[1]);
+	//printf("%x\n",ptr[0]);
+	//printf("%x\n",ptr[1]);
 
 
 	ptr[0] = ptr[0]+1;
