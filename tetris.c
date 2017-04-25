@@ -398,10 +398,22 @@ if(block_index == 7)
 static int checkBounds(int * ptr) {
 	if(rotCounter ==1 || rotCounter ==3)
 	{
-		if(ptr[0] ==18) return 1;
+		if(block_index == 6)
+		{
+			if(ptr[0]==17) return 1;
+		}
+		else{
+			if(ptr[0] ==18) return 1;
+		}
 	}
 	else{
-		if (ptr[0] == 19) return 1;
+		if(block_index == 6)
+		{
+			if(ptr[0]==18) return 1;
+		}
+		else{
+			if (ptr[0] == 17) return 1;
+		}
 	}
 	 return 0;
 }
@@ -496,7 +508,7 @@ void copyBlock(int inBlock[8],int outBlock[8]){
 }
 
 static void randomShape(){
-	int randNum = 6;
+	int randNum = 5;
 
 	switch(randNum){
 		case 0:
