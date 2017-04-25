@@ -434,12 +434,23 @@ static int moveRight(int shape[8],int * ptr) {
 
 	//erase the old shape
 	eraseShape(ptr);
-
-	if ((ptr[1] + 5) <= 9) ptr[1] = ptr[1] + 1;
-	//bounds check to the right.
-	else if ((ptr[1] + 5) == 10) {
-		if (shape[3] == 0 && shape[7] == 0) ptr[1] = ptr[1]+1;
+	if(rotCounter == 0||rotCounter==2)
+	{
+		if ((ptr[1] + 5) <= 9) ptr[1] = ptr[1] + 1;
+		//bounds check to the right.
+		else if ((ptr[1] + 5) == 10) {
+			if (shape[3] == 0 && shape[7] == 0) ptr[1] = ptr[1]+1;
+		}
 	}
+	else
+	{
+		if ((ptr[1] + 3) <= 9) ptr[1] = ptr[1] + 1;
+		//bounds check to the right.
+		else if ((ptr[1] + 3) == 10) {
+			if (shape[3] == 0 && shape[7] == 0) ptr[1] = ptr[1]+1;
+		}
+	}
+
 	return ptr[1];
 }
 
