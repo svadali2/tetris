@@ -84,22 +84,22 @@ int curBlock[8] = {0,0,0,0,
 char input;
 
 int rotCounter;
-static void drawGrid(int grid[20][10]) {
+static void drawGrid(int grid_temp[20][10]) {
 	
 for (i = 0; i < 20; i ++) {
 	for (j = 0;j < 10;j++) {
 		if (j == 0 || j == 9) {
-			grid[i][j] = 1;
+			grid_temp[i][j] = 1;
 		}
 		else if (i== 0 || i == 19) {
-			grid[i][j] = 1;
+			grid_temp[i][j] = 1;
 		}
 	}
 }
 
 for (i = 0; i < 20; i ++) {
 	for (j = 0;j < 10;j++) {
-		if (grid[i][j] == 1) {
+		if (grid_temp[i][j] == 1) {
 			printf("*");
 		}
 		else printf(" ");
@@ -387,8 +387,8 @@ if(block_index == 7)
 }
 
 
-	printf("%x\n",ptr[0]);
-	printf("%x\n",ptr[1]);
+	//printf("%x\n",ptr[0]);
+	//printf("%x\n",ptr[1]);
 
 
 	ptr[0] = ptr[0]+1;
@@ -471,7 +471,7 @@ static int moveDown(int shape[8],int * ptr) {
 }
 
 static int rotate(int shape[8],int*ptr){
-		if(rotCounter == 1 || rotCounter ==3)
+	if(rotCounter == 1 || rotCounter ==3)
 		{
 		grid[ptr[0]][ptr[1]] = 0;
 		grid[ptr[0]][ptr[1]+1] = 0;
@@ -609,9 +609,11 @@ int main() {
 	
 	while(!checkEndGame())
 	{
+		//drawGrid(grid_fixed);
+		drawGrid(grid);
 		randomShape();
 		drawShape(curBlock);
-		drawGrid(grid_fixed);
+		
 
 		rotCounter = 0;
 		while(!checkBounds(start_ptr)){
