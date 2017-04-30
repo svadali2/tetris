@@ -461,8 +461,8 @@ if(block_index == 7)
 }
 
 
-	//printf("%x\n",ptr[0]);
-	//printf("%x\n",ptr[1]);
+	printf("%x\n",ptr[0]);
+	printf("%x\n",ptr[1]);
 
 
 	if (still_moving) ptr[0] = ptr[0]+1;
@@ -489,6 +489,7 @@ static int moveRight(int shape[8],int * ptr) {
 
 	//erase the old shape
 	eraseShape(ptr);
+	
 	if(rotCounter == 0||rotCounter==2)
 	{
 		if ((ptr[1] + 5) <= 9) ptr[1] = ptr[1] + 1;
@@ -622,7 +623,30 @@ static void randomShape(){
 	//return resultShape;
 }
 
-static int checkBounds(int grid[20][10]) {
+static int checkBounds(int * ptr) {
+	if(rotCounter ==1 || rotCounter ==3)
+	{
+		if(block_index == 6)
+		{
+			if(ptr[0]==17) return 1;
+		}
+		else{
+			if(ptr[0] ==18) return 1;
+		}
+	}
+	else{
+		if(block_index == 6)
+		{
+			if(ptr[0]==18) return 1;
+		}
+		else{
+			if (ptr[0] == 17) return 1;
+		}
+	}
+	 return 0;
+}
+
+static int checkEndGame(int grid[20][10]) {
 	
 	for (i = 1; i < 9; i++) {
 		if (grid[1][i] == 1) return 1;
@@ -670,24 +694,27 @@ int main() {
 		if (still_moving){			
 			if (kbhit()) {
 				input = getchar();
-				if (input == 'a') {
-					//move left
-					start_ptr[1] = moveLeft(curBlock,start_ptr);
-				}
-				else if (input == 'd') {
-					//move right
-					start_ptr[1] = moveRight(curBlock,start_ptr);
-				}
-				else if (input == 'w') {
-					//rotate
-					rotCounter++;
-					start_ptr[0] = rotate(curBlock,start_ptr);
-				}
-				else if (input == 's') {
-					//move down
-					//printf("before:%d\n",start_ptr[0]);
-					start_ptr[0] = moveDown(curBlock,start_ptr,grid);
-					//printf("after:%d\n",start_ptr[0]);
+					if(!checkBounds(start_ptr))
+					{
+						if (input == 'a') {
+							//move left
+							start_ptr[1] = moveLeft(curBlock,start_ptr);
+						}
+						else if (input == 'd') {
+							//move right
+							start_ptr[1] = moveRight(curBlock,start_ptr);
+						}
+						else if (input == 'w') {
+							//rotate
+							rotCounter++;
+							start_ptr[0] = rotate(curBlock,start_ptr);
+						}
+						else if (input == 's') {
+						//move down
+						//printf("before:%d\n",start_ptr[0]);
+						start_ptr[0] = moveDown(curBlock,start_ptr,grid);
+						//printf("after:%d\n",start_ptr[0]);
+					}
 				}
 			}
 			
@@ -695,7 +722,7 @@ int main() {
 			drawGrid(grid);
 		}
 		else {
-			int endGame = checkBounds(grid);
+			int endGame = checkEndGame(grid);
 			if (endGame) break;
 			start_pt[0] =1;
 			start_pt[1] = 3;
