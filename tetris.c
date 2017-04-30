@@ -31,8 +31,10 @@ int kbhit(void)
 
   return 0;
 }
-
-int grid[20][10];
+int numRow = 20;
+int numCol = 10;
+int grid[numRow][numCol];
+int grid_fixed[numRow][numCol];
 
 int shape1[4][8] = {{0,1,0,0,
 		 							1,1,1,0},
@@ -71,7 +73,6 @@ int shape6[2][8] = {{1,1,1,1,
 										{1,0,1,0,
 										1,0,1,0}};
 int shape7[8] = {1,1,0,0,
-								 1,1,0,0};
 
 int block_index = 0; 
 int i,j;
@@ -558,6 +559,11 @@ static void randomShape(){
 
 	//return resultShape;
 }
+
+void checkEnd(){
+
+	for()
+}
 int main() {
 	
 	drawGrid(grid);		//draw initial grid
@@ -569,31 +575,34 @@ int main() {
 	randomShape();
 	drawShape(curBlock);
 	drawGrid(grid);
+	while(!checkEnd())
+	{
 
-	rotCounter = 0;
-	while(!checkBounds(start_ptr)){
+		rotCounter = 0;
+		while(!checkBounds(start_ptr)){
 
-		for (i = 0; i < 500000000;i++);
-		if (kbhit()) {
-			input = getchar();
-			if (input == 'a') {
-				//move left
-				start_ptr[1] = moveLeft(curBlock,start_ptr);
+			for (i = 0; i < 500000000;i++);
+			if (kbhit()) {
+				input = getchar();
+				if (input == 'a') {
+					//move left
+					start_ptr[1] = moveLeft(curBlock,start_ptr);
+				}
+				else if (input == 'd') {
+					start_ptr[1] = moveRight(curBlock,start_ptr);
+				}
+				else if (input == 'w') {
+					rotCounter++;
+					start_ptr[0] = rotate(curBlock,start_ptr);
+				}
+				else if (input == 's') {
+					start_ptr[0] = moveDown(curBlock,start_ptr);
+				}
 			}
-			else if (input == 'd') {
-				start_ptr[1] = moveRight(curBlock,start_ptr);
-			}
-			else if (input == 'w') {
-				rotCounter++;
-				start_ptr[0] = rotate(curBlock,start_ptr);
-			}
-			else if (input == 's') {
-				start_ptr[0] = moveDown(curBlock,start_ptr);
-			}
+
+			start_ptr = moveShape(curBlock,start_ptr);
+			drawGrid(grid);
 		}
-
-		start_ptr = moveShape(curBlock,start_ptr);
-		drawGrid(grid);
 	}
 	return 0;
 }
