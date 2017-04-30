@@ -33,8 +33,9 @@ int kbhit(void)
 }
 int numRow = 20;
 int numCol = 10;
-int grid[numRow][numCol];
-int grid_fixed[numRow][numCol];
+
+int grid[20][10];
+int grid_fixed[20][10];
 
 int shape1[4][8] = {{0,1,0,0,
 		 							1,1,1,0},
@@ -73,6 +74,7 @@ int shape6[2][8] = {{1,1,1,1,
 										{1,0,1,0,
 										1,0,1,0}};
 int shape7[8] = {1,1,0,0,
+								1,1,0,0};
 
 int block_index = 0; 
 int i,j;
@@ -417,6 +419,8 @@ static int checkBounds(int * ptr) {
 		}
 	}
 	 return 0;
+
+
 }
 
 static int moveLeft(int shape[8],int * ptr) {
@@ -520,7 +524,7 @@ void copyBlock(int inBlock[8],int outBlock[8]){
 }
 
 static void randomShape(){
-	int randNum = 5;
+	int randNum = rand()%7;
 
 	switch(randNum){
 		case 0:
@@ -560,9 +564,39 @@ static void randomShape(){
 	//return resultShape;
 }
 
-void checkEnd(){
+int checkEndGame(){
+	
+	for(i = 1; i<numCol-1;i++)
+	{
+		if(grid_fixed[1][i]==1)
+			return 1;
+	}
+	return 0; 
+}
 
-	for()
+void land(int inBlockGrid[numRow][numCol], int * start_ptr){
+	if(rotCounter == 0 || rotCounter ==2)
+	{
+		grid_fixed[start_ptr[0]][start_ptr[1]] = inBlockGrid[start_ptr[0]][start_ptr[1]];
+		grid_fixed[start_ptr[0]][start_ptr[1]+1] = inBlockGrid[start_ptr[0]][start_ptr[1]+1];
+		grid_fixed[start_ptr[0]][start_ptr[1]+2] = inBlockGrid[start_ptr[0]][start_ptr[1]+2];
+		grid_fixed[start_ptr[0]][start_ptr[1]+3] = inBlockGrid[start_ptr[0]][start_ptr[1]+3];
+		grid_fixed[start_ptr[0]+1][start_ptr[1]] = inBlockGrid[start_ptr[0]+1][start_ptr[1]];
+		grid_fixed[start_ptr[0]+1][start_ptr[1]+1] = inBlockGrid[start_ptr[0]+1][start_ptr[1]+1];
+		grid_fixed[start_ptr[0]+1][start_ptr[1]+2] = inBlockGrid[start_ptr[0]+1][start_ptr[1]+2];
+		grid_fixed[start_ptr[0]+1][start_ptr[1]+3] = inBlockGrid[start_ptr[0]+1][start_ptr[1]+3];
+	}
+	else
+	{
+		grid_fixed[start_ptr[0]-2][start_ptr[1]] = inBlockGrid[start_ptr[0]-2][start_ptr[1]];
+		grid_fixed[start_ptr[0]-2][start_ptr[1]+1] = inBlockGrid[start_ptr[0]-2][start_ptr[1]+1];
+		grid_fixed[start_ptr[0]-1][start_ptr[1]] = inBlockGrid[start_ptr[0]-1][start_ptr[1]];
+		grid_fixed[start_ptr[0]-1][start_ptr[1]+1] = inBlockGrid[start_ptr[0]-1][start_ptr[1]+1];
+		grid_fixed[start_ptr[0]][start_ptr[1]] = inBlockGrid[start_ptr[0]][start_ptr[1]];
+		grid_fixed[start_ptr[0]][start_ptr[1]+1] = inBlockGrid[start_ptr[0]][start_ptr[1]+1];
+		grid_fixed[start_ptr[0]+1][start_ptr[1]] = inBlockGrid[start_ptr[0]+1][start_ptr[1]];
+		grid_fixed[start_ptr[0]+1][start_ptr[1]+1] = inBlockGrid[start_ptr[0]+1][start_ptr[1]+1];
+	}
 }
 int main() {
 	
@@ -572,11 +606,12 @@ int main() {
 	int start_pt[2] = {1,3};
 	
 	int * start_ptr = start_pt;
-	randomShape();
-	drawShape(curBlock);
-	drawGrid(grid);
-	while(!checkEnd())
+	
+	while(!checkEndGame())
 	{
+		randomShape();
+		drawShape(curBlock);
+		drawGrid(grid_fixed);
 
 		rotCounter = 0;
 		while(!checkBounds(start_ptr)){
@@ -603,6 +638,8 @@ int main() {
 			start_ptr = moveShape(curBlock,start_ptr);
 			drawGrid(grid);
 		}
+		land(grid,start_ptr);
+	
 	}
 	return 0;
 }
