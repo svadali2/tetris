@@ -638,7 +638,7 @@ int main() {
 	drawGrid(grid);		//draw initial grid
 	int check[8];
 
-	
+	int hello;
 	check[0] = grid[1][1];
 	check[1] = grid[1][2];
 	check[2] = grid[1][3];
