@@ -44,36 +44,36 @@ int shape1[4][8] = {{0,1,0,0,
 		0,1,0,0},
 		{0,1,1,1,
 		0,1,0,0}};
-int shape2[4][8] = {{1,0,0,0,
-		1,1,1,0},
-		{1,1,1,0,
-		 1,0,0,0},
-		{1,1,1,0,
-		 0,0,1,0},
-	  {0,1,0,1,
-	   1,1,0,0}};
-int shape3[4][8] = {{0,0,1,0,
-			1,1,1,0},
-			{1,0,1,0,
-			 1,1,0,0},
-			{1,1,1,0,
-			 1,0,0,0},
-		  {1,1,0,1,
-		   0,1,0,0}};
-int shape4[2][8] = {{1,1,0,0,
-		   0,1,1,0},
-		  {0,1,1,1,
-		   1,0,0,0}};
-int shape5[2][8] = {{0,1,1,0,
-		1,1,0,0},
-		{1,0,1,1,
-		 0,1,0,0}};
-int shape6[2][8] = {{1,1,1,1,
+int shape2[4][8] = {{2,0,0,0,
+		2,2,2,0},
+		{2,2,2,0,
+		 2,0,0,0},
+		{2,2,2,0,
+		 0,0,2,0},
+	  {0,2,0,2,
+	   2,2,0,0}};
+int shape3[4][8] = {{0,0,3,0,
+			3,3,3,0},
+			{3,0,3,0,
+			 3,3,0,0},
+			{3,3,3,0,
+			 3,0,0,0},
+		  {3,3,0,3,
+		   0,3,0,0}};
+int shape4[2][8] = {{4,4,0,0,
+		   0,4,4,0},
+		  {0,4,4,4,
+		   4,0,0,0}};
+int shape5[2][8] = {{0,5,5,0,
+		5,5,0,0},
+		{5,0,5,5,
+		 0,5,0,0}};
+int shape6[2][8] = {{6,6,6,6,
 			0,0,0,0},
-			{1,0,1,0,
-			1,0,1,0}};
-int shape7[8] = {1,1,0,0,
-		 1,1,0,0};
+			{6,0,6,0,
+			6,0,6,0}};
+int shape7[8] = {7,7,0,0,
+		 7,7,0,0};
 
 int block_index = 0; 
 int i,j;
@@ -100,10 +100,10 @@ static void grid_land_Default()
 	for (i = 0; i < 20; i ++) {
 		for (j = 0;j < 10;j++) {
 			if (j == 0 || j == 9) {
-				grid_land[i][j] = 1;
+				grid_land[i][j] = 9;
 			}
 			else if (i== 0 || i == 19) {
-				grid_land[i][j] = 1;
+				grid_land[i][j] = 9;
 			}
 		}
 	}	
@@ -114,7 +114,7 @@ static void drawGrid(	)
 {
 	for (i = 0; i < 20; i ++) {
 		for (j = 0;j < 10;j++) {
-			if (grid[i][j] == 1) {
+			if (grid[i][j] > 0) {
 				printf("*");
 			}
 			else printf(" ");
@@ -152,8 +152,8 @@ static void eraseShape(int *ptr)
 	}
 	else
 	{
-		//grid_moving[ptr[0]-3][ptr[1]] = 0;
-		//grid_moving[ptr[0]-3][ptr[1]+1] = 0;
+		grid_moving[ptr[0]-3][ptr[1]] = 0;
+		grid_moving[ptr[0]-3][ptr[1]+1] = 0;
 		grid_moving[ptr[0]-2][ptr[1]] = 0;
 		grid_moving[ptr[0]-2][ptr[1]+1] = 0;
 		grid_moving[ptr[0]-1][ptr[1]] = 0;
@@ -170,9 +170,9 @@ static void land_fix()
 {
 	for (i = 0; i < 20; i ++) {
 		for (j = 0;j < 10;j++) {
-			if(grid_moving[i][j]==1)
+			if(grid_moving[i][j]>0)
 			{
-				grid_land[i][j]=1;
+				grid_land[i][j]=grid_moving[i][j];
 			}
 		}
 	}
@@ -520,21 +520,28 @@ static void addGrid()
 		for(j=0;j<10;j++)
 		{
 			
-			if(grid_moving[i][j]==1 && grid_land[i][j] ==0)
+			if(grid_moving[i][j]>0 && grid_land[i][j] ==0)
 			{
-				grid[i][j] = 1;
+				grid[i][j] = grid_moving[i][j];
 			}
-			else if(grid_moving[i][j]==0 && grid_land[i][j] ==1)
+			else if(grid_moving[i][j]==0 && grid_land[i][j] >0)
 			{
-				grid[i][j] = 1;
+				grid[i][j] = grid_land[i][j];
 			}
 			else if(grid_moving[i][j]==0 && grid_land[i][j] ==0)
 			{
 				grid[i][j] = 0;
 			}
-			else if(grid_moving[i][j]==1 && grid_land[i][j] ==1)
+			else if(grid_moving[i][j]>0 && grid_land[i][j] >0)
 			{
-				printf("error caught\n");
+				if(grid_land[i][j]==9)
+				{
+					grid[i][j]=9;
+				}
+				else
+				{
+					printf("error caught\n");
+				}
 			}
 		}
 	}
@@ -639,6 +646,8 @@ static int rotate(int shape[8],int*ptr){
 		grid_moving[ptr[0]+1][ptr[1]+3] = 0;
 	}
 	else {
+		grid_moving[ptr[0]-3][ptr[1]] = 0;
+		grid_moving[ptr[0]-3][ptr[1]+1] = 0;
 		grid_moving[ptr[0]-2][ptr[1]] = 0;
 		grid_moving[ptr[0]-2][ptr[1]+1] = 0;
 		grid_moving[ptr[0]-1][ptr[1]] = 0;
@@ -746,7 +755,7 @@ static int checkBounds(int * ptr) {
 static int checkEndGame(int grid[20][10], int still_moving) {
 	
 	for (i = 1; i < 9; i++) {
-		if (grid[1][i] == 1 && still_moving !=0) return 1;
+		if ((grid[1][i] > 0 )&& (still_moving ==0)) return 1;
 	}
 	
 	 return 0;
@@ -783,8 +792,9 @@ int checkMoveDown(int *ptr )
 int main() {
 	initialize_grids();
 	grid_land_Default();
-	drawGrid();		//draw initial grid
+	//draw initial grid
 	addGrid();
+	drawGrid();
 	int check[8];
 
 	int hello;
@@ -876,6 +886,7 @@ int main() {
 			addGrid();
 			drawGrid();
 			still_moving = 1;
+			rotCounter=0;
 			
 		}
 		//printf("still:%d\n",still_moving);
