@@ -187,7 +187,7 @@ static int * moveShape(int shape[8], int * ptr, int * still_moving) {
 	{
 		if(rotCounter==1)
 		{
-			if (grid_land[ptr[0]+1][ptr[1]]==0 && grid_land[ptr[0]][ptr[1]+1]==0) 
+			if (grid_land[ptr[0]+1][ptr[1]]==0 && grid_land[ptr[0]][ptr[1]+1]==0 && grid_land[ptr[0]][ptr[1]]==0&& grid_land[ptr[0]-1][ptr[1]]==0 && ptr[0]+1!=19) 
 			{
 				eraseShape(ptr);
 				grid_moving[ptr[0]-1][ptr[1]] = shape1[1][0];
@@ -204,7 +204,7 @@ static int * moveShape(int shape[8], int * ptr, int * still_moving) {
 		}
 		else if(rotCounter ==2)
 		{
-			if (grid_land[ptr[0]+1][ptr[1]] == 0 && grid_land[ptr[0]+2][ptr[1]+1] == 0 && grid_land[ptr[0]+1][ptr[1]+2] == 0)
+			if (grid_land[ptr[0]+1][ptr[1]] == 0 && grid_land[ptr[0]+1][ptr[1]+2] == 0&& grid_land[ptr[0]+1][ptr[1]+1] == 0  && grid_land[ptr[0]+2][ptr[1]+1] == 0 && ptr[0]+1!=19)
 			 {
 					eraseShape(ptr);
 					grid_moving[ptr[0]+1][ptr[1]] = shape1[2][0];
@@ -219,7 +219,7 @@ static int * moveShape(int shape[8], int * ptr, int * still_moving) {
 			else still_moving[0] = 0;
 		}
 		else if(rotCounter ==3){
-			if ((grid_land[ptr[0]+1][ptr[1]] == 0 && grid_land[ptr[0]+1][ptr[1]+1] == 0) || (grid_land[ptr[0]][ptr[1]]==0 && grid_land[ptr[0]+1][ptr[1]+1]==0)) 
+			if (grid_land[ptr[0]-1][ptr[1]+1]==0 && grid_land[ptr[0]][ptr[1]]==0 && grid_land[ptr[0]][ptr[1]+1]==0 && grid_land[ptr[0]+1][ptr[1]+1]==0 && ptr[0]+1!=19) 
 			{
 				eraseShape(ptr);
 				//grid_moving[ptr[0]-1][ptr[1]] = shape1[3][0];
@@ -234,7 +234,7 @@ static int * moveShape(int shape[8], int * ptr, int * still_moving) {
 			else still_moving[0] = 0;
 		}
 		else{
-			if (grid_land[ptr[0]+2][ptr[1]] == 0 && grid_land[ptr[0]+2][ptr[1]+1] == 0 && grid_land[ptr[0]+2][ptr[1]+2] == 0)
+			if (grid_land[ptr[0]+1][ptr[1]+1] == 0 && grid_land[ptr[0]+2][ptr[1]] == 0 && grid_land[ptr[0]+2][ptr[1]+1] == 0 && grid_land[ptr[0]+2][ptr[1]+2] == 0 && ptr[0]+1!=19)
 			{
 				eraseShape(ptr);
 				//grid_moving[ptr[0]+1][ptr[1]] = shape1[0][0];
@@ -254,7 +254,7 @@ static int * moveShape(int shape[8], int * ptr, int * still_moving) {
 	{
 		if(rotCounter==1)
 		{
-			if ( grid_land[ptr[0]+1][ptr[1]]==0  && grid_land[ptr[0]-1][ptr[1]+1]==0) 
+			if ( grid_land[ptr[0]-1][ptr[1]]==0  && grid_land[ptr[0]-1][ptr[1]+1]==0  && grid_land[ptr[0]][ptr[1]]==0 &&grid_land[ptr[0]+1][ptr[1]]==0 && ptr[0]+1!=19) 
 			{
 				eraseShape(ptr);
 				grid_moving[ptr[0]-1][ptr[1]] = shape2[1][0];
@@ -270,7 +270,7 @@ static int * moveShape(int shape[8], int * ptr, int * still_moving) {
 		}
 		else if(rotCounter ==2)
 		{
-			if (grid_land[ptr[0]+2][ptr[1]+2]==0 && grid_land[ptr[0]+1][ptr[1]]==0 && grid_land[ptr[0]+1][ptr[1]+1]==0 ) 
+			if (grid_land[ptr[0]+1][ptr[1]]==0 && grid_land[ptr[0]+1][ptr[1]+1]==0 && grid_land[ptr[0]+1][ptr[1]+2]==0 &&grid_land[ptr[0]+2][ptr[1]+2]==0 && ptr[0]+1!=19) 
 			{
 				eraseShape(ptr);
 				grid_moving[ptr[0]+1][ptr[1]] = shape2[2][0];
@@ -285,7 +285,7 @@ static int * moveShape(int shape[8], int * ptr, int * still_moving) {
 			else still_moving[0] = 0;
 		}
 		else if(rotCounter ==3){
-			if (grid_land[ptr[0]+1][ptr[1]] == 0 && grid_land[ptr[0]+1][ptr[1]+1] == 0) 
+			if (grid_land[ptr[0]-1][ptr[1]+1] == 0 && grid_land[ptr[0]][ptr[1]+1] == 0 && grid_land[ptr[0]+1][ptr[1]] == 0 && grid_land[ptr[0]+1][ptr[1]+1] == 0&& ptr[0]+1!=19) 
 			{
 				eraseShape(ptr);
 				//grid_moving[ptr[0]-1][ptr[1]] = shape2[3][0];
@@ -300,7 +300,7 @@ static int * moveShape(int shape[8], int * ptr, int * still_moving) {
 			else still_moving[0] = 0;
 		}
 		else{
-			if (grid_land[ptr[0]+2][ptr[1]] == 0 && grid_land[ptr[0]+2][ptr[1]+1] == 0 && grid_land[ptr[0]+2][ptr[1]+2] == 0 ) 
+			if (grid_land[ptr[0]+1][ptr[1]] == 0 && grid_land[ptr[0]+2][ptr[1]] == 0 && grid_land[ptr[0]+2][ptr[1]+1] == 0 && grid_land[ptr[0]+2][ptr[1]+2] == 0&& ptr[0]+1!=19) 
 			{
 				eraseShape(ptr);
 				grid_moving[ptr[0]+1][ptr[1]] = shape2[0][0];
@@ -320,7 +320,7 @@ static int * moveShape(int shape[8], int * ptr, int * still_moving) {
 	{
 		if(rotCounter==1)
 		{
-			if (grid_land[ptr[0]+1][ptr[1]] == 0 && grid_land[ptr[0]+1][ptr[1]+1] == 0) 
+			if (grid_land[ptr[0]-1][ptr[1]] == 0 &&grid_land[ptr[0]][ptr[1]] == 0 && grid_land[ptr[0]+1][ptr[1]] == 0 && grid_land[ptr[0]+1][ptr[1]+1] == 0&& ptr[0]+1!=19) 
 			{
 				eraseShape(ptr);
 				grid_moving[ptr[0]-1][ptr[1]] = shape3[1][0];
@@ -336,7 +336,7 @@ static int * moveShape(int shape[8], int * ptr, int * still_moving) {
 		}
 		else if(rotCounter ==2)
 		{
-			if ( grid_land[ptr[0]+2][ptr[1]]==0&& grid_land[ptr[0]+1][ptr[1]+1] == 0 && grid_land[ptr[0]+1][ptr[1]+2]  == 0 )
+			if ( grid_land[ptr[0]+1][ptr[1]]==0&& grid_land[ptr[0]+1][ptr[1]+1] == 0 && grid_land[ptr[0]+1][ptr[1]+2]  == 0 && grid_land[ptr[0]+2][ptr[1]]==0 && ptr[0]+1!=19)
 			 {
 				eraseShape(ptr);
 				grid_moving[ptr[0]+1][ptr[1]] = shape3[2][0];
@@ -351,7 +351,7 @@ static int * moveShape(int shape[8], int * ptr, int * still_moving) {
 			else still_moving[0] = 0;
 		}
 		else if(rotCounter ==3){
-			if ( grid_land[ptr[0]+1][ptr[1]+1] == 0&& grid_land[ptr[0]-1][ptr[1]]== 0) 
+			if ( grid_land[ptr[0]-1][ptr[1]] == 0&& grid_land[ptr[0]-1][ptr[1]+1]== 0 && grid_land[ptr[0]][ptr[1]+1] == 0 && grid_land[ptr[0]+1][ptr[1]+1] == 0&& ptr[0]+1!=19) 
 			{
 				eraseShape(ptr);
 				grid_moving[ptr[0]-1][ptr[1]] = shape3[3][0];
@@ -366,7 +366,7 @@ static int * moveShape(int shape[8], int * ptr, int * still_moving) {
 			else still_moving[0] = 0;
 		}
 		else{
-			if (grid_land[ptr[0]+2][ptr[1]] == 0 && grid_land[ptr[0]+2][ptr[1]+1] == 0 && grid_land[ptr[0]+2][ptr[1]+2] == 0) 
+			if (grid_land[ptr[0]+1][ptr[1]+2] == 0 &&grid_land[ptr[0]+2][ptr[1]] == 0 && grid_land[ptr[0]+2][ptr[1]+1] == 0 && grid_land[ptr[0]+2][ptr[1]+2] == 0&& ptr[0]+1!=19) 
 			{
 				eraseShape(ptr);
 				//grid_moving[ptr[0]+1][ptr[1]] = shape3[0][0];
@@ -386,7 +386,7 @@ static int * moveShape(int shape[8], int * ptr, int * still_moving) {
 	{
 			if(rotCounter==1)
 		{
-			if (grid_land[ptr[0]+1][ptr[1]] == 0 && grid_land[ptr[0]][ptr[1]+1]==0) 
+			if (grid_land[ptr[0]-1][ptr[1]+1] == 0 && grid_land[ptr[0]][ptr[1]] == 0&& grid_land[ptr[0]][ptr[1]+1]==0 && grid_land[ptr[0]+1][ptr[1]] == 0&& ptr[0]+1!=19) 
 			{
 				eraseShape(ptr);
 				//grid_moving[ptr[0]-1][ptr[1]] = shape4[1][0];
@@ -402,7 +402,7 @@ static int * moveShape(int shape[8], int * ptr, int * still_moving) {
 		}
 		else 
 		{
-			if (grid_land[ptr[0]+1][ptr[1]] == 0 && grid_land[ptr[0]+2][ptr[1]+1] == 0 && grid_land[ptr[0]+2][ptr[1]+2] == 0)
+			if (grid_land[ptr[0]+1][ptr[1]] == 0 && grid_land[ptr[0]+2][ptr[1]+1] == 0 && grid_land[ptr[0]+2][ptr[1]+1] == 0&& grid_land[ptr[0]+2][ptr[1]+2] == 0&& ptr[0]+1!=19)
 			 {
 					eraseShape(ptr);
 					grid_moving[ptr[0]+1][ptr[1]] = shape4[0][0];
@@ -422,7 +422,7 @@ static int * moveShape(int shape[8], int * ptr, int * still_moving) {
 	{
 		if(rotCounter==1)
 		{
-			if (grid_land[ptr[0]+1][ptr[1]+1] == 0 && grid_land[ptr[0]][ptr[1]]==0) {
+			if (grid_land[ptr[0]-1][ptr[1]] == 0 && grid_land[ptr[0]][ptr[1]] == 0 && grid_land[ptr[0]][ptr[1]+1]==0 && grid_land[ptr[0]+1][ptr[1]+1] == 0&& ptr[0]+1!=19) {
 				eraseShape(ptr);
 				grid_moving[ptr[0]-1][ptr[1]] = shape5[1][0];
 				//grid_moving[ptr[0]-1][ptr[1]+1] = shape5[1][1];
@@ -437,7 +437,7 @@ static int * moveShape(int shape[8], int * ptr, int * still_moving) {
 		}
 		else 
 		{
-			if (grid_land[ptr[0]+1][ptr[1]+2]==0 && grid_land[ptr[0]+2][ptr[1]] == 0 && grid_land[ptr[0]+2][ptr[1]+1] == 0) {
+			if (grid_land[ptr[0]+2][ptr[1]] == 0 && grid_land[ptr[0]+2][ptr[1]+1] == 0 && grid_land[ptr[0]+1][ptr[1]+1]==0 && grid_land[ptr[0]+1][ptr[1]+2]==0 && ptr[0]+1!=19) {
 				eraseShape(ptr);
 				//grid_moving[ptr[0]+1][ptr[1]] = shape5[0][0];
 				grid_moving[ptr[0]+1][ptr[1]+1] = shape5[0][1];
@@ -456,7 +456,7 @@ static int * moveShape(int shape[8], int * ptr, int * still_moving) {
 	{
 		if(rotCounter==1)
 		{
-			if (grid_land[ptr[0]+2][ptr[1]] == 0 ) {
+			if (grid_land[ptr[0]-1][ptr[1]] == 0 &&grid_land[ptr[0]][ptr[1]] == 0 &&grid_land[ptr[0]+1][ptr[1]] == 0 &&grid_land[ptr[0]+2][ptr[1]] == 0 && ptr[0]+1!=19 ) {
 				eraseShape(ptr);
 				grid_moving[ptr[0]-1][ptr[1]] = shape6[1][0];
 				//grid_moving[ptr[0]-1][ptr[1]+1] = shape6[1][1];
@@ -471,7 +471,7 @@ static int * moveShape(int shape[8], int * ptr, int * still_moving) {
 		}
 		else 
 		{
-			if (grid_land[ptr[0]+1][ptr[1]] == 0 && grid_land[ptr[0]+1][ptr[1]+1] == 0 && grid_land[ptr[0]+1][ptr[1]+2] == 0 && grid_land[ptr[0]+1][ptr[1]+3] == 0) {
+			if (grid_land[ptr[0]+1][ptr[1]] == 0 && grid_land[ptr[0]+1][ptr[1]+1] == 0 && grid_land[ptr[0]+1][ptr[1]+2] == 0 && grid_land[ptr[0]+1][ptr[1]+3] == 0&& ptr[0]+1!=19) {
 				eraseShape(ptr);
 				grid_moving[ptr[0]+1][ptr[1]] = shape6[0][0];
 				grid_moving[ptr[0]+1][ptr[1]+1] = shape6[0][1];
@@ -488,7 +488,7 @@ static int * moveShape(int shape[8], int * ptr, int * still_moving) {
 	}
 	if(block_index == 7)
 	{
-		if (grid_land[ptr[0]+2][ptr[1]] == 0 && grid_land[ptr[0]+2][ptr[1]+1] == 0 ) {
+		if (grid_land[ptr[0]+1][ptr[1]] == 0 && grid_land[ptr[0]+1][ptr[1]+1] == 0 && grid_land[ptr[0]+2][ptr[1]] == 0 && grid_land[ptr[0]+2][ptr[1]+1] == 0 && ptr[0]+1!=19) {
 			eraseShape(ptr);
 			grid_moving[ptr[0]+1][ptr[1]] = shape7[0];
 			grid_moving[ptr[0]+1][ptr[1]+1] = shape7[1];
@@ -553,16 +553,22 @@ static void addGrid()
 static int moveLeft(int shape[8],int * ptr) {
 
 	//erase the old shape
-	if ((ptr[1] - 1) >=1) 
+	if ((ptr[1] - 1) >=0) 
 		{
-			eraseShape(ptr);
-			ptr[1] = ptr[1] - 1;
+			if(grid_land[ptr[0]][ptr[1]-1] == 0)
+			{
+				eraseShape(ptr);
+				ptr[1] = ptr[1] - 1;
+			}
 		}
 	else if ((ptr[1] - 1) == 0) {
 		if (shape[0] == 0 && shape[4] == 0)
 		{
-			eraseShape(ptr);
-		  ptr[1] = ptr[1] - 1;
+			if(grid_land[ptr[0]][ptr[1]-1] == 0)
+			{
+				eraseShape(ptr);
+				ptr[1] = ptr[1] - 1;
+			}
 		}
 	}
 	return ptr[1];
@@ -572,41 +578,53 @@ static int moveRight(int shape[8],int * ptr) {
 	if(rotCounter == 0||rotCounter==2)
 	{
 
-		if ((ptr[1] + 4) <= 8) 
+		if ((ptr[1] + 4) <= 9) 
 		{
-			eraseShape(ptr);
-			ptr[1] = ptr[1] + 1;
-		}
-		//bounds check to the right.
-		else if ((ptr[1] + 4) == 9) {
-			if (shape[3] == 0 && shape[7] == 0)
+			if(grid_land[ptr[0]][ptr[1]+1] == 0)
 			{
 				eraseShape(ptr);
-				ptr[1] = ptr[1]+1;
+				ptr[1] = ptr[1] + 1;
 			}
 		}
-		else if((ptr[1]+4)==10)
-		{
+		//bounds check to the right.
+		else if ((ptr[1] + 4) == 10) {
+			if (shape[3] == 0 && shape[7] == 0)
+			{
+				if(grid_land[ptr[0]][ptr[1]+1] == 0)
+				{
+					eraseShape(ptr);
+					ptr[1] = ptr[1] + 1;
+				}
+			}
 			if(block_index==7)
 			{
-				eraseShape(ptr);
-				ptr[1]=ptr[1]+1;
+				if(grid_land[ptr[0]][ptr[1]+1] == 0)
+				{
+					eraseShape(ptr);
+					ptr[1] = ptr[1] + 1;
+				}
 			}
 		}
 	}
 	else
 	{
-		if ((ptr[1] + 3) <= 9) 
+		if ((ptr[1] + 3) <= 10) 
 		{
-			eraseShape(ptr);
-			ptr[1] = ptr[1] + 1;
+			if(grid_land[ptr[0]][ptr[1]+1] == 0)
+			{
+				eraseShape(ptr);
+				ptr[1] = ptr[1] + 1;
+			}
 		}
 		//bounds check to the right.
 		else if ((ptr[1] + 3) == 10) {
 			if (shape[3] == 0 && shape[7] == 0) 
 			{
-				eraseShape(ptr);
-				ptr[1] = ptr[1]+1;
+				if(grid_land[ptr[0]][ptr[1]+1] == 0)
+				{
+					eraseShape(ptr);
+					ptr[1] = ptr[1] + 1;
+				}
 			}
 		}
 	}
@@ -754,8 +772,8 @@ static int checkBounds(int * ptr) {
 
 static int checkEndGame(int grid[20][10], int still_moving) {
 	
-	for (i = 1; i < 9; i++) {
-		if ((grid[1][i] > 0 )&& (still_moving ==0)) return 1;
+	for (i = 0; i < 20; i++) {
+		if ((grid[0][i] > 0 )&& (still_moving ==0)) return 1;
 	}
 	
 	 return 0;
@@ -791,7 +809,7 @@ int checkMoveDown(int *ptr )
 	
 int main() {
 	initialize_grids();
-	grid_land_Default();
+	//grid_land_Default();
 	//draw initial grid
 	addGrid();
 	drawGrid();
