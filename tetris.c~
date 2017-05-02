@@ -513,7 +513,7 @@ static int moveDown(int shape[8],int * ptr,int grid[20][10]) {
 	
 	//erase the old shape
 	//eraseShape(ptr);
-	if ((ptr[0] + 1) <= 16 && grid[ptr[0]+3][ptr[1]] != 1) {
+	if ((ptr[0] + 1) <= 16 && grid[ptr[0]+3][ptr[1]] != 1 && grid[ptr[0]+3][ptr[1]+1] != 1) {
 		eraseShape(ptr);
 		ptr[0] = ptr[0] + 1;
 		}
