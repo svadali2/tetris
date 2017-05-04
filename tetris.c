@@ -610,7 +610,7 @@ static int moveLeft(int shape[8],int * ptr) {
 		{
 			if(!checkMoveLeft(ptr))
 			{
-				eraseShape(ptr);
+				//eraseShape(ptr);
 				ptr[1] = ptr[1] - 1;
 			}
 		}
@@ -619,7 +619,7 @@ static int moveLeft(int shape[8],int * ptr) {
 		{
 			if(!checkMoveLeft(ptr))
 			{
-				eraseShape(ptr);
+				//eraseShape(ptr);
 				ptr[1] = ptr[1] - 1;
 			}
 		}
@@ -637,6 +637,10 @@ if(rotCounter == 0||rotCounter==2)
 		if(ptr[1]+4 < 10)
 		{
 			if(grid_land[ptr[0]][ptr[1]+4] == 0 && grid_land[ptr[0]+1][ptr[1]+4]==0)
+			{
+				ptr[1] = ptr[1] + 1;
+			}
+			if(!((grid_land[ptr[0]][ptr[1]+1]&shape[0])||(grid_land[ptr[0]][ptr[1]+2]&shape[1])||(grid_land[ptr[0]][ptr[1]+3]&shape[2])||(grid_land[ptr[0]][ptr[1]+4]&shape[4])|| (grid_land[ptr[0]+1][ptr[1]+1]&shape[4])||(grid_land[ptr[0]+1][ptr[1]+2]&shape[5])||(grid_land[ptr[0]+1][ptr[1]+3]&shape[6])||(grid_land[ptr[0]+1][ptr[1]+4]&shape[7])))
 			{
 				ptr[1] = ptr[1] + 1;
 			}
@@ -756,54 +760,69 @@ static int checkMoveDown(int *ptr)
 {
 	if(rotCounter==0 || rotCounter ==2)
 	{
-		if(grid_land[ptr[0]+2][ptr[1]]==0 && grid_land[ptr[0]+2][ptr[1]+1]==0 && grid_land[ptr[0]+2][ptr[1]+2]==0 && grid_land[ptr[0]+2][ptr[1]+3]==0)
-		{
-			return 0; 
-		}
-		else if(grid_land[ptr[0]+2][ptr[1]]==0 && grid_land[ptr[0]+2][ptr[1]+1]==0 && grid_land[ptr[0]+2][ptr[1]+2]==0 && block_index!=6)
+
+		if(!((grid_moving[ptr[0]][ptr[1]]&grid_land[ptr[0]+1][ptr[1]])||(grid_moving[ptr[0]][ptr[1]+1]&grid_land[ptr[0]+1][ptr[1]+1])||(grid_moving[ptr[0]][ptr[1]+2]&grid_land[ptr[0]+1][ptr[1]+2])||(grid_moving[ptr[0]][ptr[1]+3]&grid_land[ptr[0]+1][ptr[1]+3])||(grid_moving[ptr[0]+1][ptr[1]]&grid_land[ptr[0]+2][ptr[1]])||(grid_moving[ptr[0]+1][ptr[1]+1]&grid_land[ptr[0]+2][ptr[1]+1])||(grid_moving[ptr[0]+1][ptr[1]+2]&grid_land[ptr[0]+2][ptr[1]]+2)||(grid_moving[ptr[0]+1][ptr[1]+3]&grid_land[ptr[0]+2][ptr[1]+3])))
 		{
 			return 0;
 		}
-		else if(grid_land[ptr[0]+2][ptr[1]]==0 && grid_land[ptr[0]+2][ptr[1]+1]==0 && block_index==7)
-		{
-			return 0; 
-		}
+		// if(grid_land[ptr[0]+1][ptr[1]]==0 && grid_land[ptr[0]+1][ptr[1]+1]==0 && grid_land[ptr[0]+1][ptr[1]+2]==0 && grid_land[ptr[0]+1][ptr[1]+3]==0)
+		// {
+		// 	return 0; 
+		// }
+		// else if(grid_land[ptr[0]+1][ptr[1]]==0 && grid_land[ptr[0]+1][ptr[1]+1]==0 && grid_land[ptr[0]+1][ptr[1]+2]==0 && block_index!=6)
+		// {
+		// 	return 0;
+		// }
+		// else if(grid_land[ptr[0]+1][ptr[1]]==0 && grid_land[ptr[0]+1][ptr[1]+1]==0 && block_index==7)
+		// {
+		// 	return 0; 
+		// }
 	}
 	else if(rotCounter ==1 || rotCounter ==3)
 	{
-		if(block_index == 6)
+		if(!((grid_moving[ptr[0]][ptr[1]]&grid_land[ptr[0]+1][ptr[1]])||(grid_moving[ptr[0]][ptr[1]+1]&grid_land[ptr[0]+1][ptr[1]+1])||(grid_moving[ptr[0]+1][ptr[1]]&grid_land[ptr[0]+2][ptr[1]])||(grid_moving[ptr[0]+1][ptr[1]+1]&grid_land[ptr[0]+2][ptr[1]+1])||(grid_moving[ptr[0]+2][ptr[1]]&grid_land[ptr[0]+3][ptr[1]])||(grid_moving[ptr[0]+2][ptr[1]+1]&grid_land[ptr[0]+3][ptr[1]+1])||(grid_moving[ptr[0]+3][ptr[1]]&grid_land[ptr[0]+4][ptr[1]])||(grid_moving[ptr[0]+3][ptr[1]+1]&grid_land[ptr[0]+4][ptr[1]+1])))
 		{
-			if(grid_land[ptr[0]+2][ptr[1]]==0)
-			{
-				return 0;
-			}
-		}
-		else 
-		{
-			if(grid_land[ptr[0]][ptr[1]-1]==0 && grid_land[ptr[0]+1][ptr[1]-1]==0 && grid_land[ptr[0]+2][ptr[1]-1]==0  )
-			{
-				return 0; 
-			}
-			else if(((grid_land[ptr[0]-1][ptr[1]-1]+grid_moving[ptr[0]-1][ptr[1]] == grid_land[ptr[0]-1][ptr[1]-1])||(grid_land[ptr[0]-1][ptr[1]-1]+grid_moving[ptr[0]-1][ptr[1]] == grid_moving[ptr[0]-1][ptr[1]])) 
-				&& ((grid_land[ptr[0]][ptr[1]-1]+grid_moving[ptr[0]][ptr[1]] == grid_land[ptr[0]][ptr[1]-1])||(grid_land[ptr[0]][ptr[1]-1]+grid_moving[ptr[0]][ptr[1]] == grid_moving[ptr[0]][ptr[1]]))
-				&&((grid_land[ptr[0]+1][ptr[1]-1]+grid_moving[ptr[0]+1][ptr[1]] == grid_land[ptr[0]+1][ptr[1]-1])||(grid_land[ptr[0]+1][ptr[1]-1]+grid_moving[ptr[0]+1][ptr[1]] == grid_moving[ptr[0]+1][ptr[1]])))
-			{
-				return 0;
-			}
+			return 0;
 		}
 	}
+	// 	if(block_index == 6)
+	// 	{
+	// 		if(grid_land[ptr[0]+1][ptr[1]]==0)
+	// 		{
+	// 			return 0;
+	// 		}
+	// 	}
+	// 	else 
+	// 	{
+	// 		if(grid_land[ptr[0]][ptr[1]-1]==0 && grid_land[ptr[0]+1][ptr[1]-1]==0 && grid_land[ptr[0]+2][ptr[1]-1]==0  )
+	// 		{
+	// 			return 0; 
+	// 		}
+	// 		else if(((grid_land[ptr[0]-1][ptr[1]-1]+grid_moving[ptr[0]-1][ptr[1]] == grid_land[ptr[0]-1][ptr[1]-1])||(grid_land[ptr[0]-1][ptr[1]-1]+grid_moving[ptr[0]-1][ptr[1]] == grid_moving[ptr[0]-1][ptr[1]])) 
+	// 			&& ((grid_land[ptr[0]][ptr[1]-1]+grid_moving[ptr[0]][ptr[1]] == grid_land[ptr[0]][ptr[1]-1])||(grid_land[ptr[0]][ptr[1]-1]+grid_moving[ptr[0]][ptr[1]] == grid_moving[ptr[0]][ptr[1]]))
+	// 			&&((grid_land[ptr[0]+1][ptr[1]-1]+grid_moving[ptr[0]+1][ptr[1]] == grid_land[ptr[0]+1][ptr[1]-1])||(grid_land[ptr[0]+1][ptr[1]-1]+grid_moving[ptr[0]+1][ptr[1]] == grid_moving[ptr[0]+1][ptr[1]])))
+	// 		{
+	// 			return 0;
+	// 		}
+	// 	}
+	// }
 	return 1;
 }
-static int moveDown(int shape[8],int * ptr,int grid[20][10]) {
+static int moveDown(int shape[8],int * ptr,int grid[20][10]) 
+{
 	
 	//erase the old shape
 	//eraseShape(ptr);
 	if ((ptr[0] + 1) <= 16) {
-		// if(!checkMoveDown(ptr))
-		// {
-			eraseShape(ptr);
+		if(!checkMoveDown(ptr))
+		 {
+			//eraseShape(ptr);
 			ptr[0] = ptr[0] + 1;
-		// }
+		 }
+		 else
+		 {
+		 	ptr[0] = ptr[0] ;
+		 }
 	}
 	/*if (grid[ptr[0]+1][ptr[1]] != 1 && (ptr[0] + 2) < 17) {
 		//printf("grid:%d\n",grid[ptr[0]+1][ptr[1]]);
@@ -1035,10 +1054,10 @@ int main() {
 
 	rotCounter = 0;
 	while(1){
-	for (i = 0; i < 500000000;i++);
+	for (i = 0; i < 100000000;i++);
 		if (still_moving){			
 			if (kbhit()) {
-					if(!checkBounds(start_ptr) && !checkMoveDown(start_ptr))
+					if(!checkBounds(start_ptr) )
 					{
 						input = getchar();
 						if (input == 'a') {
@@ -1060,10 +1079,10 @@ int main() {
 						else if (input == 's') {
 						//move down
 						//printf("before:%d\n",start_ptr[0]);
-							if(!checkMoveDown(start_ptr))
-							{
+							// if(!checkMoveDown(start_ptr))
+							// {
 								start_ptr[0] = moveDown(curBlock,start_ptr,grid);
-							}
+							//
 						
 						//printf("after:%d\n",start_ptr[0]);
 					}
