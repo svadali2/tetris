@@ -680,7 +680,7 @@ if(rotCounter == 0||rotCounter==2)
 			{
 				if(grid_land[ptr[0]][ptr[1]+1] == 0 && grid_land[ptr[0]+1][ptr[1]+1]==0 && grid_land[ptr[0]+1][ptr[1]+2] == 0 && grid_land[ptr[0]+3][ptr[1]+1]==0)
 				{
-					if(shape[1] == 0 && shape[3] == 0 && shape[5] == 0 && shape[7] == 0)
+					if(block_index == 6)
 					{
 						ptr[1] = ptr[1] + 1;
 					}
@@ -875,7 +875,7 @@ static void randomShape(){
 	int randNum;
 		randNum = rand()%7;
 	//randNum = 6;
-	randNum = 5;
+	//randNum = 5;
 		printf("%d\n",randNum );
 
 	switch(randNum){
